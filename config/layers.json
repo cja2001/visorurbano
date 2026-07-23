@@ -47,8 +47,82 @@
             "visible": true,
             "searchable": true,
             "popup": true,
-            "style": {
-                "color": "#616161",
+            "styleType": "categorized",
+            "categorizedField": "Tipo",
+            "categories": {
+                "Tierra": {
+                    "color": "#795548",
+                    "weight": 3
+                },
+                "Asfalto": {
+                    "color": "#212121",
+                    "weight": 3
+                },
+                "Pavimento": {
+                    "color": "#0B5ED7",
+                    "weight": 3
+                },
+                "Adoquines y piedra": {
+                    "color": "#7E57C2",
+                    "weight": 3
+                },
+                "Piedra": {
+                    "color": "#607D8B",
+                    "weight": 3
+                },
+                "Huella vehicular": {
+                    "color": "#E65100",
+                    "weight": 2.5,
+                    "dashArray": "6 4"
+                },
+                "Entrada de parque acuático": {
+                    "color": "#009688",
+                    "weight": 3
+                }
+            },
+            "defaultStyle": {
+                "color": "#9E9E9E",
+                "weight": 2
+            }
+        },
+        {
+            "id": "calles_san_marcos",
+            "name": "Calles San Marcos",
+            "file": "data/CALLES SAN MARCOS.geojson",
+            "geometry": "line",
+            "visible": true,
+            "searchable": true,
+            "popup": true,
+            "styleType": "categorized",
+            "categorizedField": "Estado",
+            "categories": {
+                "Tierra": {
+                    "color": "#795548",
+                    "weight": 3
+                },
+                "Asfalto": {
+                    "color": "#212121",
+                    "weight": 3
+                },
+                "Pavimento": {
+                    "color": "#0B5ED7",
+                    "weight": 3
+                },
+                "Adoquin": {
+                    "color": "#7E57C2",
+                    "weight": 3
+                },
+                "Piedra": {
+                    "color": "#607D8B",
+                    "weight": 3
+                },
+                "Miselaneo": {
+                    "color": "#D81B60",
+                    "weight": 2.5
+                }
+            },
+            "defaultStyle": {
+                "color": "#9E9E9E",
                 "weight": 2
             }
         },
@@ -111,8 +185,8 @@
             "cluster": true,
             "searchable": true,
             "popup": true,
-            "icon": "hammer",
-            "markerColor": "#00897B"
+            "icon": "trowel-bricks",
+            "markerColor": "#A9A9A9"
         },
         {
             "id": "colonias",
@@ -127,6 +201,44 @@
                 "weight": 2,
                 "fillColor": "#A5D6A7",
                 "fillOpacity": 0.20
+            }
+        },
+        {
+            "id": "referentes_zonales",
+            "name": "Referentes Zonales",
+            "file": "data/REFERENTES ZONALES.geojson",
+            "geometry": "point",
+            "visible": true,
+            "searchable": true,
+            "popup": true,
+            "icon": "user",
+            "markerColor": "#00FFFF"
+        },
+        {
+            "id": "centros_escolares",
+            "name": "Centros Educativos",
+            "file": "data/CENTROS EDUCATIVOS.geojson",
+            "geometry": "point",
+            "visible": false,
+            "cluster": true,
+            "searchable": true,
+            "popup": true,
+            "categorizedIcon": {
+                "field": "sector",
+                "categories": {
+                    "PUBLICO": {
+                        "icon": "school",
+                        "markerColor": "#1565C0"
+                    },
+                    "PRIVADO": {
+                        "icon": "school",
+                        "markerColor": "#E91E63"
+                    }
+                },
+                "default": {
+                    "icon": "school",
+                    "markerColor": "#757575"
+                }
             }
         }
     ]

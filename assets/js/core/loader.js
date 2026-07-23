@@ -59,12 +59,20 @@ export class LayerLoader {
      */
     async loadSingleLayer(config) {
         try {
-            const response = await fetch(config.file);
+            const response = await fetch(`${config.file}?t=${Date.now()}`);
             if (!response.ok) {
                 throw new Error(`HTTP ${response.status} al cargar ${config.file}`);
             }
 
             const geojsonData = await response.json();
+
+            // Apply filter if configured (e.g. filter by sector: PUBLICO/PRIVADO)
+            if (config.filter && config.filter.field && config.filter.value) {
+                geojsonData.features = geojsonData.features.filter(f => {
+                    const val = String(f.properties[config.filter.field] || "").trim().toUpperCase();
+                    return val === config.filter.value.trim().toUpperCase();
+                });
+            }
             
             // Extract attribute fields from first feature if available
             if (geojsonData.features && geojsonData.features.length > 0) {
@@ -72,6 +80,9 @@ export class LayerLoader {
             } else {
                 config.fields = [];
             }
+            
+            // Store raw GeoJSON for stats/charts (works even for layers without toGeoJSON)
+            config._rawData = geojsonData;
             
             let layerInstance = null;
 
@@ -95,8 +106,11 @@ export class LayerLoader {
                             }
                             
                             // Custom style to match the marker Color
+                            const clusterColor = config.categorizedIcon
+                                ? (config.categorizedIcon.clusterColor || '#546E7A')
+                                : (config.markerColor || '#0B5ED7');
                             return new L.DivIcon({ 
-                                html: `<div style="background-color: ${config.markerColor || '#0B5ED7'}; border: 3px solid rgba(255,255,255,0.6); box-shadow: 0 2px 5px rgba(0,0,0,0.2);"><span>${childCount}</span></div>`, 
+                                html: `<div style="background-color: ${clusterColor}; border: 3px solid rgba(255,255,255,0.6); box-shadow: 0 2px 5px rgba(0,0,0,0.2);"><span>${childCount}</span></div>`, 
                                 className: 'marker-cluster' + c, 
                                 iconSize: new L.Point(40, 40) 
                             });
@@ -106,10 +120,25 @@ export class LayerLoader {
                     // Add point features as individual layers to cluster group
                     const pointsLayer = L.geoJSON(geojsonData, {
                         pointToLayer: (feature, latlng) => {
+                            // Resolve icon/color: categorizedIcon takes priority over static icon
+                            let iconName = config.icon;
+                            let markerColor = config.markerColor;
+                            if (config.categorizedIcon) {
+                                const rawVal = feature.properties[config.categorizedIcon.field];
+                                const fieldVal = String(rawVal || "").trim().toUpperCase();
+                                const matchKey = Object.keys(config.categorizedIcon.categories).find(
+                                    k => k.trim().toUpperCase() === fieldVal
+                                );
+                                const cat = matchKey
+                                    ? config.categorizedIcon.categories[matchKey]
+                                    : config.categorizedIcon.default;
+                                console.log(`[CatIcon] raw="${rawVal}" fieldVal="${fieldVal}" matchKey="${matchKey}" cat=`, cat);
+                                if (cat) { iconName = cat.icon; markerColor = cat.markerColor; }
+                            }
+                            console.log(`[Marker] icon="${iconName}" color="${markerColor}"`);
                             const marker = L.marker(latlng, {
-                                icon: createMarkerIcon(config.icon, config.markerColor)
+                                icon: createMarkerIcon(iconName, markerColor)
                             });
-                            
                             if (config.popup) {
                                 this.popupManager.bindPopup(marker, config.name, feature.properties);
                             }
@@ -228,7 +257,39 @@ export class LayerLoader {
             } else {
                 // For LineStrings and Polygons (Vector geometries)
                 layerInstance = L.geoJSON(geojsonData, {
-                    style: () => {
+                    style: (feature) => {
+                        // Apply categorized styles if configured
+                        if (config.styleType === "categorized" && config.categorizedField && config.categories && feature && feature.properties) {
+                            const val = String(feature.properties[config.categorizedField] || "").trim().toLowerCase();
+                            
+                            // Find matching category (case-insensitive and trim-insensitive)
+                            const matchedKey = Object.keys(config.categories).find(
+                                key => key.trim().toLowerCase() === val
+                            );
+                            
+                            if (matchedKey) {
+                                const catStyle = config.categories[matchedKey];
+                                return {
+                                    color: catStyle.color || "#1565C0",
+                                    weight: catStyle.weight || 3,
+                                    fillColor: catStyle.fillColor || "#90CAF9",
+                                    fillOpacity: catStyle.fillOpacity !== undefined ? catStyle.fillOpacity : 0.2,
+                                    dashArray: catStyle.dashArray || null
+                                };
+                            }
+                            
+                            // Fallback to defaultStyle if no match found
+                            if (config.defaultStyle) {
+                                return {
+                                    color: config.defaultStyle.color || "#1565C0",
+                                    weight: config.defaultStyle.weight || 3,
+                                    fillColor: config.defaultStyle.fillColor || "#90CAF9",
+                                    fillOpacity: config.defaultStyle.fillOpacity !== undefined ? config.defaultStyle.fillOpacity : 0.2,
+                                    dashArray: config.defaultStyle.dashArray || null
+                                };
+                            }
+                        }
+
                         // Apply custom style rules or default styles
                         return {
                             color: config.style?.color || "#1565C0",
