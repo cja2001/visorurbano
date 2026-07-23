@@ -1,0 +1,146 @@
+/* ==========================================================
+   VISOR URBANO SAN SALVADOR SUR
+   responsive.css
+   ========================================================== */
+
+@media (max-width: 1024px) {
+    #container {
+        grid-template-columns: 280px 1fr 280px;
+    }
+    
+    .search-container {
+        width: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    #container {
+        display: block !important;
+        position: relative !important;
+        height: calc(100vh - 165px) !important;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    #sidebar {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 280px !important;
+        z-index: 1010;
+        box-shadow: 5px 0 15px rgba(0,0,0,0.15);
+        transform: translateX(0);
+        transition: transform 0.3s ease;
+    }
+
+    #sidebar.collapsed {
+        transform: translateX(-100%) !important;
+        width: 280px !important; /* Keep width so transform works correctly */
+    }
+
+    #infoPanel {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 280px !important;
+        z-index: 1010;
+        box-shadow: -5px 0 15px rgba(0,0,0,0.15);
+        transform: translateX(0);
+        transition: transform 0.3s ease;
+    }
+
+    #infoPanel.collapsed {
+        transform: translateX(100%) !important;
+        width: 280px !important;
+    }
+
+    #mapContainer {
+        width: 100% !important;
+        height: 100% !important;
+        position: relative;
+    }
+
+    /* Position the slide handles relative to panels collapse state */
+    .panel-toggle-btn.left {
+        left: 280px !important;
+        transition: left 0.3s ease !important;
+    }
+
+    #container.sidebar-collapsed .panel-toggle-btn.left {
+        left: 0 !important;
+    }
+
+    .panel-toggle-btn.right {
+        right: 280px !important;
+        transition: right 0.3s ease !important;
+    }
+
+    #container.infopanel-collapsed .panel-toggle-btn.right {
+        right: 0 !important;
+    }
+
+    /* Adjust header for vertical wrap */
+    #topbar {
+        height: auto !important;
+        min-height: 70px;
+        flex-direction: column;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .logo {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .search-container {
+        width: 100%;
+    }
+
+    .toolbar {
+        width: 100%;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    /* Footer wrap */
+    footer {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        height: auto !important;
+        padding: 8px;
+        gap: 4px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Hide text labels inside tab buttons on small screens to fit space */
+    .tab-btn span {
+        display: none;
+    }
+    
+    .tab-btn i {
+        font-size: 18px;
+    }
+    
+    .tab-btn {
+        padding: 10px 0;
+    }
+    
+    /* Make slide drawers take up slightly more screen ratio */
+    #sidebar, #infoPanel {
+        width: 260px !important;
+    }
+    
+    .panel-toggle-btn.left {
+        left: 260px !important;
+    }
+    
+    .panel-toggle-btn.right {
+        right: 260px !important;
+    }
+}

@@ -1,0 +1,245 @@
+{
+    "project": {
+        "name": "Visor Urbano San Salvador Sur",
+        "version": "1.0.0",
+        "defaultZoom": 13,
+        "defaultCenter": [
+            13.6768,
+            -89.1914
+        ]
+    },
+    "layers": [
+        {
+            "id": "municipio",
+            "name": "San Salvador Sur",
+            "file": "data/SAN SALVADOR SUR.geojson",
+            "geometry": "polygon",
+            "visible": true,
+            "searchable": false,
+            "popup": true,
+            "style": {
+                "color": "#1565C0",
+                "weight": 3,
+                "fillColor": "#90CAF9",
+                "fillOpacity": 0.15
+            }
+        },
+        {
+            "id": "cantones",
+            "name": "Cantones",
+            "file": "data/CANTONES SSS.geojson",
+            "geometry": "polygon",
+            "visible": false,
+            "searchable": true,
+            "popup": true,
+            "style": {
+                "color": "#43A047",
+                "weight": 2,
+                "fillColor": "#A5D6A7",
+                "fillOpacity": 0.20
+            }
+        },
+        {
+            "id": "calles",
+            "name": "Calles",
+            "file": "data/CALLES DE PANCHIMALCO.geojson",
+            "geometry": "line",
+            "visible": true,
+            "searchable": true,
+            "popup": true,
+            "styleType": "categorized",
+            "categorizedField": "Tipo",
+            "categories": {
+                "Tierra": {
+                    "color": "#795548",
+                    "weight": 3
+                },
+                "Asfalto": {
+                    "color": "#212121",
+                    "weight": 3
+                },
+                "Pavimento": {
+                    "color": "#0B5ED7",
+                    "weight": 3
+                },
+                "Adoquines y piedra": {
+                    "color": "#7E57C2",
+                    "weight": 3
+                },
+                "Piedra": {
+                    "color": "#607D8B",
+                    "weight": 3
+                },
+                "Huella vehicular": {
+                    "color": "#E65100",
+                    "weight": 2.5,
+                    "dashArray": "6 4"
+                },
+                "Entrada de parque acuático": {
+                    "color": "#009688",
+                    "weight": 3
+                }
+            },
+            "defaultStyle": {
+                "color": "#9E9E9E",
+                "weight": 2
+            }
+        },
+        {
+            "id": "calles_san_marcos",
+            "name": "Calles San Marcos",
+            "file": "data/CALLES SAN MARCOS.geojson",
+            "geometry": "line",
+            "visible": true,
+            "searchable": true,
+            "popup": true,
+            "styleType": "categorized",
+            "categorizedField": "Estado",
+            "categories": {
+                "Tierra": {
+                    "color": "#795548",
+                    "weight": 3
+                },
+                "Asfalto": {
+                    "color": "#212121",
+                    "weight": 3
+                },
+                "Pavimento": {
+                    "color": "#0B5ED7",
+                    "weight": 3
+                },
+                "Adoquin": {
+                    "color": "#7E57C2",
+                    "weight": 3
+                },
+                "Piedra": {
+                    "color": "#607D8B",
+                    "weight": 3
+                },
+                "Miselaneo": {
+                    "color": "#D81B60",
+                    "weight": 2.5
+                }
+            },
+            "defaultStyle": {
+                "color": "#9E9E9E",
+                "weight": 2
+            }
+        },
+        {
+            "id": "rutas",
+            "name": "Rutas Alternas",
+            "file": "data/RUTAS ALTERNAS SSS.geojson",
+            "geometry": "line",
+            "visible": false,
+            "searchable": true,
+            "popup": true,
+            "style": {
+                "color": "#FB8C00",
+                "weight": 4,
+                "dashArray": "8 6"
+            }
+        },
+        {
+            "id": "luminarias",
+            "name": "Luminarias",
+            "file": "data/2° PROYECTO DE LUMINARIAS.geojson",
+            "geometry": "point",
+            "visible": true,
+            "cluster": true,
+            "searchable": true,
+            "popup": true,
+            "icon": "lightbulb",
+            "markerColor": "#FDD835"
+        },
+        {
+            "id": "baches",
+            "name": "Baches",
+            "file": "data/BACHES.geojson",
+            "geometry": "point",
+            "visible": false,
+            "cluster": true,
+            "searchable": true,
+            "popup": true,
+            "icon": "road",
+            "markerColor": "#E53935"
+        },
+        {
+            "id": "centros",
+            "name": "Centros de Votación",
+            "file": "data/CENTROS DE VOTACION.geojson",
+            "geometry": "point",
+            "visible": false,
+            "cluster": false,
+            "searchable": true,
+            "popup": true,
+            "icon": "school",
+            "markerColor": "#3949AB"
+        },
+        {
+            "id": "planmol",
+            "name": "Plan MOL 2026",
+            "file": "data/PLAN MOL 2026.geojson",
+            "geometry": "point",
+            "visible": false,
+            "cluster": true,
+            "searchable": true,
+            "popup": true,
+            "icon": "trowel-bricks",
+            "markerColor": "#A9A9A9"
+        },
+        {
+            "id": "colonias",
+            "name": "Colonias",
+            "file": "data/COLONIAS SAN MARCOS.geojson",
+            "geometry": "polygon",
+            "visible": false,
+            "searchable": true,
+            "popup": true,
+            "style": {
+                "color": "#43A047",
+                "weight": 2,
+                "fillColor": "#A5D6A7",
+                "fillOpacity": 0.20
+            }
+        },
+        {
+            "id": "referentes_zonales",
+            "name": "Referentes Zonales",
+            "file": "data/REFERENTES ZONALES.geojson",
+            "geometry": "point",
+            "visible": true,
+            "searchable": true,
+            "popup": true,
+            "icon": "user",
+            "markerColor": "#00FFFF"
+        },
+        {
+            "id": "centros_escolares",
+            "name": "Centros Educativos",
+            "file": "data/CENTROS EDUCATIVOS.geojson",
+            "geometry": "point",
+            "visible": false,
+            "cluster": true,
+            "searchable": true,
+            "popup": true,
+            "categorizedIcon": {
+                "field": "sector",
+                "categories": {
+                    "PUBLICO": {
+                        "icon": "school",
+                        "markerColor": "#1565C0"
+                    },
+                    "PRIVADO": {
+                        "icon": "school",
+                        "markerColor": "#E91E63"
+                    }
+                },
+                "default": {
+                    "icon": "school",
+                    "markerColor": "#757575"
+                }
+            }
+        }
+    ]
+}
