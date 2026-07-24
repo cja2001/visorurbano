@@ -77,14 +77,16 @@ export class LegendManager {
             user-select: none;
         `;
 
-        // Left: mini-symbol + name
+        // Left: mini-symbol + name + total count badge
+        const totalCount = config._rawData ? config._rawData.features.length : null;
         const leftSide = document.createElement("div");
-        leftSide.style.cssText = "display:flex;align-items:center;gap:8px;min-width:0;";
+        leftSide.style.cssText = "display:flex;align-items:center;gap:8px;min-width:0;flex:1;";
         leftSide.innerHTML = `
             ${this._buildMiniSymbol(config)}
-            <span style="font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
+            <span style="font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;">
                 ${config.name}
             </span>
+            ${totalCount !== null ? this._countBadge(totalCount) : ""}
         `;
 
         // Right: chevron (only for multi-symbol layers)
@@ -185,25 +187,37 @@ export class LegendManager {
     _buildBodyHTML(config) {
         // --- CATEGORIZED ICON (puntos con categorización) ---
         if (config.categorizedIcon && config.categorizedIcon.categories) {
+            const counts = this._countByCategory(
+                config._rawData,
+                config.categorizedIcon.field,
+                Object.keys(config.categorizedIcon.categories)
+            );
             let rows = "";
             Object.entries(config.categorizedIcon.categories).forEach(([label, cat]) => {
-                rows += this._iconRow(cat.icon, cat.markerColor, label);
+                const cnt = counts.matched[label] ?? 0;
+                rows += this._iconRow(cat.icon, cat.markerColor, label, cnt);
             });
             if (config.categorizedIcon.default) {
                 const d = config.categorizedIcon.default;
-                rows += this._iconRow(d.icon, d.markerColor, "Otros");
+                rows += this._iconRow(d.icon, d.markerColor, "Otros", counts.others);
             }
             return `<div style="display:flex;flex-direction:column;gap:6px;">${rows}</div>`;
         }
 
         // --- CATEGORIZED STYLE (líneas / polígonos) ---
         if (config.styleType === "categorized" && config.categories) {
+            const counts = this._countByCategory(
+                config._rawData,
+                config.categorizedField,
+                Object.keys(config.categories)
+            );
             let rows = "";
             Object.entries(config.categories).forEach(([label, catStyle]) => {
-                rows += this._shapeRow(config.geometry, catStyle, label);
+                const cnt = counts.matched[label] ?? 0;
+                rows += this._shapeRow(config.geometry, catStyle, label, cnt);
             });
             if (config.defaultStyle) {
-                rows += this._shapeRow(config.geometry, config.defaultStyle, "Otros");
+                rows += this._shapeRow(config.geometry, config.defaultStyle, "Otros", counts.others);
             }
             return `<div style="display:flex;flex-direction:column;gap:6px;">${rows}</div>`;
         }
@@ -212,20 +226,79 @@ export class LegendManager {
         if (config.id === "centros") {
             const sizes = [10, 14, 18, 22, 26];
             const labels = ["0 - 2 JRVs","2 - 5 JRVs","5 - 8 JRVs","8 - 11 JRVs","11 - 20 JRVs"];
+            const rangeKeys = ["0-2","2-5","5-8","8-11","11-20"];
+            // Count centros per range using JRV field
+            const rangeCounts = { "0-2": 0, "2-5": 0, "5-8": 0, "8-11": 0, "11-20": 0 };
+            if (config._rawData) {
+                config._rawData.features.forEach(f => {
+                    let jrv = 0;
+                    if (f.properties) {
+                        for (const k of Object.keys(f.properties)) {
+                            if (k.toLowerCase() === "jrv") { jrv = parseInt(f.properties[k], 10) || 0; break; }
+                        }
+                    }
+                    if (jrv <= 2) rangeCounts["0-2"]++;
+                    else if (jrv <= 5) rangeCounts["2-5"]++;
+                    else if (jrv <= 8) rangeCounts["5-8"]++;
+                    else if (jrv <= 11) rangeCounts["8-11"]++;
+                    else rangeCounts["11-20"]++;
+                });
+            }
             let rows = "";
             sizes.forEach((s, i) => {
+                const cnt = rangeCounts[rangeKeys[i]];
                 rows += `
                     <div style="display:flex;align-items:center;gap:10px;">
                         <span style="display:inline-block;width:${s}px;height:${s}px;border-radius:50%;
                             background:#4dd0e1;border:1.5px solid #006064;
                             box-shadow:0 1px 3px rgba(0,0,0,.1);flex-shrink:0;"></span>
-                        <span style="font-size:11px;color:var(--text);">${labels[i]}</span>
+                        <span style="font-size:11px;color:var(--text);flex:1;">${labels[i]}</span>
+                        ${this._countBadge(cnt)}
                     </div>`;
             });
             return `<div style="display:flex;flex-direction:column;gap:6px;">${rows}</div>`;
         }
 
         return "";
+    }
+
+    /* -------------------------------------------------------
+       CONTEO POR CATEGORÍA
+       Devuelve { matched: { [label]: count }, others: count }
+    ------------------------------------------------------- */
+    _countByCategory(rawData, field, categoryKeys) {
+        const matched = {};
+        categoryKeys.forEach(k => { matched[k] = 0; });
+        let others = 0;
+
+        if (!rawData || !field) return { matched, others };
+
+        rawData.features.forEach(f => {
+            if (!f.properties) { others++; return; }
+            const val = String(f.properties[field] ?? "").trim().toUpperCase();
+            const matchKey = categoryKeys.find(k => k.trim().toUpperCase() === val);
+            if (matchKey) {
+                matched[matchKey]++;
+            } else {
+                others++;
+            }
+        });
+
+        return { matched, others };
+    }
+
+    /* -------------------------------------------------------
+       BADGE DE CONTEO
+    ------------------------------------------------------- */
+    _countBadge(count) {
+        return `<span style="
+            display:inline-flex;align-items:center;justify-content:center;
+            background:var(--primary,#0B5ED7);color:#fff;
+            font-size:10px;font-weight:700;line-height:1;
+            min-width:20px;height:18px;padding:0 5px;
+            border-radius:9px;flex-shrink:0;
+            box-shadow:0 1px 3px rgba(0,0,0,.15);
+        ">${count.toLocaleString()}</span>`;
     }
 
     /* -------------------------------------------------------
@@ -242,15 +315,16 @@ export class LegendManager {
             </span>`;
     }
 
-    _iconRow(iconName, color, label) {
+    _iconRow(iconName, color, label, count = null) {
         return `
             <div style="display:flex;align-items:center;gap:10px;">
                 ${this._pointSymbol(iconName, color, 20)}
-                <span style="font-size:11px;color:var(--text);">${label}</span>
+                <span style="font-size:11px;color:var(--text);flex:1;">${label}</span>
+                ${count !== null ? this._countBadge(count) : ""}
             </div>`;
     }
 
-    _shapeRow(geometry, catStyle, label) {
+    _shapeRow(geometry, catStyle, label, count = null) {
         let sym = "";
         if (geometry === "polygon") {
             const stroke = catStyle.color || "#1565C0";
@@ -266,7 +340,8 @@ export class LegendManager {
         return `
             <div style="display:flex;align-items:center;gap:10px;">
                 ${sym}
-                <span style="font-size:11px;color:var(--text);">${label}</span>
+                <span style="font-size:11px;color:var(--text);flex:1;">${label}</span>
+                ${count !== null ? this._countBadge(count) : ""}
             </div>`;
     }
 }

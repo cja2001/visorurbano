@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Visor Urbano | San Salvador Sur</title>
+    <title>Visor Territorial | San Salvador Sur</title>
 
     <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -137,18 +137,26 @@
 
                     <!-- Constructor de gráfico -->
                     <div id="chartBuilder" style="display:flex;flex-direction:column;gap:10px;">
-                        <label style="font-size:12px;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px;">Capa</label>
-                        <select id="chartLayerSelect" style="width:100%;padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--panel-bg);color:var(--text);font-size:13px;">
+                        <label
+                            style="font-size:12px;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px;">Capa</label>
+                        <select id="chartLayerSelect"
+                            style="width:100%;padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--panel-bg);color:var(--text);font-size:13px;">
                             <option value="">-- Seleccionar capa --</option>
                         </select>
 
-                        <label style="font-size:12px;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px;">Campo a analizar</label>
-                        <select id="chartFieldSelect" style="width:100%;padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--panel-bg);color:var(--text);font-size:13px;">
+                        <label
+                            style="font-size:12px;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px;">Campo
+                            a analizar</label>
+                        <select id="chartFieldSelect"
+                            style="width:100%;padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--panel-bg);color:var(--text);font-size:13px;">
                             <option value="">-- Primero elige una capa --</option>
                         </select>
 
-                        <label style="font-size:12px;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px;">Tipo de gráfico</label>
-                        <select id="chartTypeSelect" style="width:100%;padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--panel-bg);color:var(--text);font-size:13px;">
+                        <label
+                            style="font-size:12px;font-weight:600;color:var(--text-light);text-transform:uppercase;letter-spacing:.5px;">Tipo
+                            de gráfico</label>
+                        <select id="chartTypeSelect"
+                            style="width:100%;padding:7px 10px;border-radius:8px;border:1px solid var(--border);background:var(--panel-bg);color:var(--text);font-size:13px;">
                             <option value="bar">&#9646; Barras</option>
                             <option value="pie">&#11044; Torta</option>
                             <option value="doughnut">&#9711; Dona</option>
@@ -207,21 +215,25 @@
             <!-- Panel de gráfico -->
             <div id="chartPanel" style="padding:16px;">
                 <!-- Placeholder cuando no hay gráfico -->
-                <div id="chartPlaceholder" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:40px 16px;text-align:center;opacity:.5;">
+                <div id="chartPlaceholder"
+                    style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:40px 16px;text-align:center;opacity:.5;">
                     <i class="fa-solid fa-chart-column" style="font-size:40px;color:var(--text-light);"></i>
-                    <p style="font-size:13px;color:var(--text-light);margin:0;">Selecciona una capa y un campo en la pestaña <strong>Estadísticas</strong> para generar un gráfico.</p>
+                    <p style="font-size:13px;color:var(--text-light);margin:0;">Selecciona una capa y un campo en la
+                        pestaña <strong>Estadísticas</strong> para generar un gráfico.</p>
                 </div>
 
                 <!-- Contenido del gráfico (oculto hasta generarlo) -->
                 <div id="chartContent" style="display:none;">
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
                         <span id="chartPanelTitle" style="font-size:13px;font-weight:700;color:var(--text);"></span>
-                        <button id="btnCloseChart" title="Limpiar gráfico" style="background:none;border:none;cursor:pointer;color:var(--text-light);font-size:16px;">&#10005;</button>
+                        <button id="btnCloseChart" title="Limpiar gráfico"
+                            style="background:none;border:none;cursor:pointer;color:var(--text-light);font-size:16px;">&#10005;</button>
                     </div>
                     <div style="position:relative;width:100%;">
                         <canvas id="mainChart"></canvas>
                     </div>
-                    <div id="chartSummary" style="margin-top:12px;font-size:11px;color:var(--text-light);text-align:center;"></div>
+                    <div id="chartSummary"
+                        style="margin-top:12px;font-size:11px;color:var(--text-light);text-align:center;"></div>
                 </div>
             </div>
 
